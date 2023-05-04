@@ -7,4 +7,8 @@ load_dotenv(f"{Path(__file__).parents[1]}/config.env")
 
 
 class Config:
-    TEMP: str = environ.get("TEMP", "Temporary")
+    try:
+        DB_URI: str = environ.get("DB_URI")
+    except Exception:
+        print("DB_URI config not found.\nExiting..")
+        exit()
