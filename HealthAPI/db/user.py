@@ -15,6 +15,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from HealthAPI.db import BASE, SESSION
+from HealthAPI.helpers import object_as_dict
 
 
 class User(BASE):
@@ -124,7 +125,8 @@ def update_user(
 
 def get_uinfo(user_id: str):
     try:
-        return SESSION.query(User).filter(User.user_id == user_id).first()
+        res = SESSION.query(User).filter(User.user_id == user_id).first()
+        return object_as_dict(res)
     finally:
         SESSION.close()
 

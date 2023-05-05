@@ -3,6 +3,7 @@ import threading
 from sqlalchemy import Column, String, UnicodeText
 
 from HealthAPI.db import BASE, SESSION
+from HealthAPI.helpers import object_as_dict
 
 
 class Hospital(BASE):
@@ -60,7 +61,8 @@ def update_hosp(hosp_id: str, name: str, license: str, address: str):
 
 def get_hinfo(hosp_id: str):
     try:
-        return SESSION.query(Hospital).filter(Hospital.hosp_id == hosp_id).first()
+        row = SESSION.query(Hospital).filter(Hospital.hosp_id == hosp_id).first()
+        return object_as_dict(row)
     finally:
         SESSION.close()
 
