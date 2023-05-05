@@ -10,7 +10,7 @@ def start():
     engine = create_engine(Config.DB_URI)
     BASE.metadata.bind = engine
     BASE.metadata.create_all(engine)
-    return scoped_session(sessionmaker(bind=engine))
+    return scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 
 SESSION = start()
