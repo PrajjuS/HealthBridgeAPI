@@ -11,6 +11,7 @@ from sqlalchemy import (
     ForeignKey,
     String,
     UnicodeText,
+    Integer
 )
 from sqlalchemy.orm import relationship
 
@@ -56,8 +57,8 @@ class User(BASE):
 
 class UserHealth(BASE):
     __tablename__ = "user_reports"
-    id = Column(primary_key=True)
-    date_time = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
+    id = Column(Integer, primary_key=True)
+    date_time = Column(DateTime, nullable=False, default=datetime.utcnow)
     report = Column(UnicodeText, nullable=False)
     user_id = Column(String, ForeignKey("user.user_id"), nullable=False)
 
