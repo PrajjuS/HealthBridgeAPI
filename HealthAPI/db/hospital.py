@@ -52,7 +52,6 @@ def create_hosp(hosp_id: str, password: str, name: str, license: str, address: s
 def update_hosp(hosp_id: str, password: str, name: str, license: str, address: str):
     with HOSP_LOCK:
         hrow = SESSION.query(Hospital).get(hosp_id)
-        hrow.password = password
         hrow.name = name
         hrow.license = license
         hrow.address = address

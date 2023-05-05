@@ -113,7 +113,6 @@ def update_user(
 ):
     with USER_LOCK:
         urow = SESSION.query(User).get(user_id)
-        urow.password = password
         urow.name = name
         urow.gender = gender
         urow.dob = dob
