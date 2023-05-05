@@ -104,7 +104,6 @@ def create_user(
 
 def update_user(
     user_id: str,
-    password: str,
     name: str,
     gender: str,
     dob: date,
