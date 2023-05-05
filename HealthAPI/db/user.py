@@ -149,4 +149,4 @@ def create_ureport(user_id: str, date_time: datetime, report: str):
     with USER_LOCK:
         report = UserHealth(date_time=date_time, report=report, user_id=user_id)
         SESSION.add(report)
-        SESSION.commit
+        SESSION.commit()
