@@ -1,4 +1,5 @@
 import datetime
+import threading
 from datetime import date, datetime
 
 from sqlalchemy import (
@@ -12,7 +13,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from HealthAPI.db import BASE
+from HealthAPI.db import BASE, SESSION
 
 
 class User(BASE):
@@ -63,3 +64,71 @@ class UserHealth(BASE):
 
 User.__table__.create(checkfirst=True)
 UserHealth.__table__.create(checkfirst=True)
+
+
+USER_LOCK = threading.RLock()
+
+
+def create_user(
+    user_id: str,
+    password: str,
+    name: str,
+    dob: date,
+    mobile: int,
+    address: str,
+):
+    with USER_LOCK:
+        user = User(
+            user_id=user_id,
+            password=password,
+            name=name,
+            dob=dob,
+            mobile=mobile,
+            address=address,
+        )
+        SESSION.add(user)
+        SESSION.commit()
+
+
+def update_user(
+    user_id: str,
+    password: str,
+    name: str,
+    dob: date,
+    mobile: int,
+    address: str,
+):
+    with USER_LOCK:
+        urow = SESSION.query(User).get(user_id)
+        urow.password = password
+        urow.name = name
+        urow.dob = dob
+        urow.mobile = mobile
+        urow.address = address
+        SESSION.commit()
+
+
+def get_uinfo(user_id: str):
+    try:
+        return SESSION.query(User).filter(User.user_id == user_id).first()
+    finally:
+        SESSION.close()
+
+
+def auth_uuser(user_id: str, password: str):
+    user = get_uinfo(user_id)
+    return user.password == password
+
+
+def check_uuser(user_id: str):
+    user = get_uinfo(user_id)
+    if user:
+        return True
+    return False
+
+
+def create_ureport(user_id: str, date_time: datetime, report: str):
+    with USER_LOCK:
+        report = UserHealth(date_time=date_time, report=report, user_id=user_id)
+        SESSION.add(report)
+        SESSION.commit
