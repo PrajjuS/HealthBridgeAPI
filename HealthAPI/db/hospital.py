@@ -6,7 +6,7 @@ from HealthAPI.db import BASE, SESSION
 
 
 class Hospital(BASE):
-    __table__ = "hospital"
+    __tablename__ = "hospital"
     hosp_id = Column(String, primary_key=True)
     password = Column(String, nullable=False)
     name = Column(String, nullable=False)
