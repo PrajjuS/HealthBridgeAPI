@@ -21,7 +21,7 @@ class Hospital(BASE):
         license: str,
         address: str,
     ):
-        self.hostp_id = hosp_id
+        self.hosp_id = hosp_id
         self.password = password
         self.name = name
         self.license = license
