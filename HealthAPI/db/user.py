@@ -1,6 +1,7 @@
 import datetime
 import threading
 from datetime import date, datetime
+from typing import Optional
 
 from sqlalchemy import (
     CHAR,
@@ -9,9 +10,9 @@ from sqlalchemy import (
     Date,
     DateTime,
     ForeignKey,
+    Integer,
     String,
     UnicodeText,
-    Integer
 )
 from sqlalchemy.orm import relationship
 
@@ -62,8 +63,8 @@ class UserHealth(BASE):
     report = Column(UnicodeText, nullable=False)
     user_id = Column(String, ForeignKey("user.user_id"), nullable=False)
 
-    def __init__(self, date_time: datetime, report: str, user_id: str):
-        self.date_time = date_time
+    def __init__(self, report: str, user_id: str, date_time: Optional[datetime] = None):
+        self.date_time = date_time if date_time is not None else datetime.utcnow()
         self.report = report
         self.user_id = user_id
 
@@ -133,6 +134,20 @@ def get_uinfo(user_id: str, is_dict: bool = False):
         SESSION.close()
 
 
+def get_ureports(user_id: str):
+    try:
+        final_res = []
+        res = SESSION.query(User).filter(User.user_id == user_id).first()
+        for r in res.reports:
+            r = object_as_dict(r)
+            r.pop("id")
+            r.pop("user_id")
+            final_res.append(r)
+        return final_res
+    finally:
+        SESSION.close()
+
+
 def auth_uuser(user_id: str, password: str):
     user = get_uinfo(user_id)
     return user.password == password
@@ -145,8 +160,8 @@ def check_uuser(user_id: str):
     return False
 
 
-def create_ureport(user_id: str, date_time: datetime, report: str):
+def create_ureport(user_id: str, report: str):
     with USER_LOCK:
-        report = UserHealth(date_time=date_time, report=report, user_id=user_id)
+        report = UserHealth(report=report, user_id=user_id, date_time=None)
         SESSION.add(report)
         SESSION.commit()

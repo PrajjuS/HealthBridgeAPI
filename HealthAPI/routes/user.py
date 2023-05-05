@@ -4,8 +4,10 @@ from HealthAPI.db.hospital import auth_huser, check_huser
 from HealthAPI.db.user import (
     auth_uuser,
     check_uuser,
+    create_ureport,
     create_user,
     get_uinfo,
+    get_ureports,
     update_user,
 )
 from HealthAPI.helpers import Error, generate_id
@@ -28,13 +30,12 @@ async def user_root():
 
 @router.get(
     "/user/info",
-    response_model=UserMainModel,
     response_model_exclude={"password"},
 )
 async def user_info(hosp_id: str, h_pass: str, user_id: str):
     check_and_auth(hosp_id, h_pass)
     if res := get_uinfo(user_id, is_dict=True):
-        return {**res}
+        return {**res, "reports": get_ureports(user_id)}
     return Error.USER_NOT_FOUND
 
 
@@ -79,3 +80,20 @@ async def user_create(hosp_id: str, h_pass: str, details: UserMainModel):
         details.address,
     )
     return details
+
+
+@router.post("/user/report")
+async def user_report(
+    hosp_id: str,
+    h_pass: str,
+    user_id: str,
+    u_pass: str,
+    report: str,
+):
+    check_and_auth(hosp_id, h_pass)
+    if not check_uuser(user_id):
+        return Error.USER_NOT_FOUND
+    if not auth_uuser(user_id, u_pass):
+        return Error.INVALID_USER_AUTH
+    create_ureport(user_id, report)
+    return {"user_id": user_id, "report": report}
