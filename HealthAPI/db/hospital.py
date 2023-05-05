@@ -49,7 +49,7 @@ def create_hosp(hosp_id: str, password: str, name: str, license: str, address: s
         SESSION.commit()
 
 
-def update_hosp(hosp_id: str, password: str, name: str, license: str, address: str):
+def update_hosp(hosp_id: str, name: str, license: str, address: str):
     with HOSP_LOCK:
         hrow = SESSION.query(Hospital).get(hosp_id)
         hrow.name = name
