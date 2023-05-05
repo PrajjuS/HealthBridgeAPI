@@ -59,10 +59,12 @@ def update_hosp(hosp_id: str, name: str, license: str, address: str):
         SESSION.commit()
 
 
-def get_hinfo(hosp_id: str):
+def get_hinfo(hosp_id: str, is_dict: bool = False):
     try:
-        row = SESSION.query(Hospital).filter(Hospital.hosp_id == hosp_id).first()
-        return object_as_dict(row)
+        res = SESSION.query(Hospital).filter(Hospital.hosp_id == hosp_id).first()
+        if not is_dict:
+            return res
+        return object_as_dict(res)
     finally:
         SESSION.close()
 

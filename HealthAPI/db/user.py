@@ -123,9 +123,11 @@ def update_user(
         SESSION.commit()
 
 
-def get_uinfo(user_id: str):
+def get_uinfo(user_id: str, is_dict: bool = False):
     try:
         res = SESSION.query(User).filter(User.user_id == user_id).first()
+        if not is_dict:
+            return res
         return object_as_dict(res)
     finally:
         SESSION.close()
