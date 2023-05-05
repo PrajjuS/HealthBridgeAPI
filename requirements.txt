@@ -2,3 +2,4 @@ fastapi
 python-dotenv
 SQLAlchemy==1.4.11
 uvicorn
+psycopg2-binary
