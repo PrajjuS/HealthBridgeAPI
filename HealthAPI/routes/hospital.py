@@ -26,7 +26,7 @@ async def hospital_root():
 async def hosp_info(hosp_id: str):
     if res := get_hinfo(hosp_id, is_dict=True):
         return {**res}
-    return Error.USER_NOT_FOUND
+    return Error.HOSPITAL_NOT_FOUND
 
 
 @router.post(
