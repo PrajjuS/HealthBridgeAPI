@@ -12,3 +12,13 @@ class UserMainModel(BaseModel):
     bloodgroup: str
     mobile: int
     address: str
+
+
+class NewUserModel(BaseModel):
+    password: str
+    name: str
+    gender: str
+    dob: date
+    bloodgroup: str
+    mobile: int
+    address: str

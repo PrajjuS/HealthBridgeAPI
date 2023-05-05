@@ -7,3 +7,10 @@ class HospitalMainModel(BaseModel):
     name: str
     license: str
     address: str
+
+
+class NewHospitalModel(BaseModel):
+    password: str
+    name: str
+    license: str
+    address: str
