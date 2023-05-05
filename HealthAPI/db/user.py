@@ -3,6 +3,7 @@ import threading
 from datetime import date, datetime
 
 from sqlalchemy import (
+    CHAR,
     BigInteger,
     Column,
     Date,
@@ -21,7 +22,9 @@ class User(BASE):
     user_id = Column(String, primary_key=True)
     password = Column(String, nullable=False)
     name = Column(String, nullable=False)
+    gender = Column(CHAR, nullable=False)
     dob = Column(Date, nullable=False)
+    bloodgroup = Column(String, nullable=False)
     mobile = Column(BigInteger, nullable=False)
     address = Column(String, nullable=False)
     reports = relationship("UserHealth", backref="hreport", lazy=True)
@@ -31,14 +34,18 @@ class User(BASE):
         user_id: str,
         password: str,
         name: str,
+        gender: str,
         dob: date,
+        bloodgroup: str,
         mobile: str,
         address: str,
     ):
         self.user_id = user_id
         self.password = password
         self.name = name
+        self.gender = gender
         self.dob = dob
+        self.bloodgroup = bloodgroup
         self.mobile = mobile
         self.address = address
 
@@ -73,7 +80,9 @@ def create_user(
     user_id: str,
     password: str,
     name: str,
+    gender: str,
     dob: date,
+    bloodgroup: str,
     mobile: int,
     address: str,
 ):
@@ -82,7 +91,9 @@ def create_user(
             user_id=user_id,
             password=password,
             name=name,
+            gender=gender,
             dob=dob,
+            bloodgroup=bloodgroup,
             mobile=mobile,
             address=address,
         )
@@ -94,7 +105,9 @@ def update_user(
     user_id: str,
     password: str,
     name: str,
+    gender: str,
     dob: date,
+    bloodgroup: str,
     mobile: int,
     address: str,
 ):
@@ -102,7 +115,9 @@ def update_user(
         urow = SESSION.query(User).get(user_id)
         urow.password = password
         urow.name = name
+        urow.gender = gender
         urow.dob = dob
+        urow.bloodgroup = bloodgroup
         urow.mobile = mobile
         urow.address = address
         SESSION.commit()
